@@ -13,6 +13,3 @@ skipDirs      = @["private"]
 # Dependencies
 requires "nim >= 0.16.0"
 
-# Tasks
-task compile_main, "Compiles the project":
-    exec "nim c -d:ssl -r gdsync/src/gdsync.nim --out gdsync/bin/gdsync"

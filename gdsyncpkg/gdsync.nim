@@ -1,4 +1,10 @@
 import oauth2
+import strutils, httpclient
+import json
+
+const 
+  authoriseURL = "https://accounts.google.com/o/oauth2/v2/auth"
+  accessTokenUrl = "https://accounts.google.com/o/oauth2/v2/token"
 
 proc main*(argv: seq[string] = nil): int =
   ## Google Drive Syncer main function
