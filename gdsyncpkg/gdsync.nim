@@ -1,8 +1,10 @@
 import oauth2
+import os
 import typetraits
 import strutils, httpclient
 import json
 import asyncnet, asyncdispatch
+import streams
 include secret.auth
 
 
@@ -25,25 +27,41 @@ proc main(argv: seq[string] = nil) {.async.} =
   echo authorizeURL
   echo accessTokenUrl
 
-  let response = authorizationCodeGrant(
-      getStr(authorizeURL),
-      getStr(accessTokenUrl),
-      clientId,
-      clientSecret,
-      html,
-      scope = @["https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.metadata"])
+  var tokens = newFileStream("tokens", fmRead)
+  var tokenType:string = ""
+  var accessToken:string = ""
+  var refreshToken:string = ""
+  let url = "https://www.googleapis.com/drive/v3/files"
 
-  echo response.body
+  if not isNil(tokens):
+    accessToken = tokens.readLine()
+    refreshToken = tokens.readLine()
+    tokenType = tokens.readLine()
+  else:
+    let response = authorizationCodeGrant(
+        getStr(authorizeURL),
+        getStr(accessTokenUrl),
+        clientId,
+        clientSecret,
+        html,
+        scope = @["https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/drive.metadata"])
 
-  let
-    obj = parseJson(response.body)
-    url = "https://www.googleapis.com/drive/v3/files"
+    echo response.body
+
+    var
+      obj = parseJson(response.body)
+
     accessToken = obj["access_token"].str
     tokenType = obj["token_type"].str
     refreshToken = obj["refresh_token"].str
 
-  echo obj
+    echo obj
+    var o = open("tokens", fmWrite)
+    o.writeln(accessToken)
+    o.writeln(refreshToken)
+    o.writeln(tokenType)
+    o.close()
 
   if tokenType == "Bearer":
     let r = bearerRequest(url, accessToken)
@@ -60,14 +78,18 @@ proc main(argv: seq[string] = nil) {.async.} =
         media_list.add(getStr(file["mimeType"]))
     echo id_list
     echo name_list
+    echo media_list
 
-    for media, id in [media_list, id_list].pairs:
-      echo id.type.name
-      echo media.type.name
-      #var id_url = gapiGetUrl & id & export_url_part & media
-      #echo id_url
-      #let id_r = bearerRequest(id_url, accessToken)
-      #echo id_r
+    for media, id in media_list:
+      for id in id_list:
+        echo id.type.name
+        echo media.type.name
+        var id_url = gapiGetUrl & id & export_url_part & media
+        echo id_url
+        let resp = getContent(id_url)
+        echo resp
+        #let id_r = bearerRequest(id_url, accessToken)
+        #echo id_r
 
   if argv == nil:
     echo "No Commands"
