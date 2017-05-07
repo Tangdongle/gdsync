@@ -5,9 +5,10 @@ author        = "ryancotter,ashleybroughton"
 description   = "Google Drive sync application for linux"
 license       = "GNU"
 
-srcDir           = "gdsync/src"
-binDir          = "gdsync/bin"
-bin              = @["gdsync"]
+srcDir        = "gdsync/src"
+binDir        = "gdsync/bin"
+bin           = @["gdsync"]
+skipDirs      = @["private"]
 # Dependencies
 requires "nim >= 0.16.0"
 when defined(nimdistros):
@@ -16,6 +17,4 @@ when defined(nimdistros):
         foreignDep "libssl-dev"
     else:
         foreignDep "openssl"
-
-requires "oath >= 0.4"
 
