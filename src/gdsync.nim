@@ -27,8 +27,11 @@ proc doAction(options: Options) =
     if options.showVersion:
       showVersion()
 
+  of actionWatch:
+    watch(options)
+
   else:
-    echo options
+    echo "Unhandled option: " & $(options)
 
 
 when isMainModule:
