@@ -16,8 +16,18 @@ proc main*(argv: seq[string] = nil): int =
   echo argv
   return 1
 
+proc doAction(options: Options) =
+  echo options
+
 when isMainModule:
   import os
+
+  try:
+    parseCmdLine().doAction()
+    quit(0)
+  except:
+    echo getCurrentExceptionMsg()
+    quit(1)
 
   echo "GDSinkers"
 
