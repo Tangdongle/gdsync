@@ -14,6 +14,11 @@ type Options* = object
   showHelp*: bool
   showVersion*: bool
 
+proc initOptions(): Options =
+  result.action.typ = actionNil
+  result.showHelp = false
+  result.showVersion = false
+
 proc parseCommand(key: string, result: var Options) =
   echo "parseCommand"
   echo key
@@ -35,7 +40,7 @@ proc parseFlag(flag: string, val: string, result: var Options, kind = cmdLongOpt
     echo kind
 
 proc parseCmdLine*(): Options =
-  result.action.typ = actionNil   # set default action
+  result = initOptions()
 
   for kind, key, val in getOpt():
     case kind
