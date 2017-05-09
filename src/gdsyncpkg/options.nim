@@ -1,4 +1,5 @@
 import parseopt2
+import strutils
 
 type ActionType* = enum
   actionNil
@@ -11,6 +12,7 @@ type Action* = object
 type Options* = object
   action*: Action
   showHelp*: bool
+  showVersion*: bool
 
 proc parseCommand(key: string, result: var Options) =
   echo "parseCommand"
@@ -21,10 +23,16 @@ proc parseArgument(key: string, result: var Options) =
   echo key
 
 proc parseFlag(flag: string, val: string, result: var Options, kind = cmdLongOption) =
-  echo "parseFlag"
-  echo flag
-  echo val
-  echo kind
+  let f = flag.normalize()
+
+  case f
+  of "help", "h": result.showHelp = true
+  of "version", "v": result.showVersion = true
+  else:
+    echo "parseFlag"
+    echo flag
+    echo val
+    echo kind
 
 proc parseCmdLine*(): Options =
   result.action.typ = actionNil   # set default action
@@ -42,6 +50,6 @@ proc parseCmdLine*(): Options =
       echo kind
 
 
-  # show usage if no action is specified
-  if result.action.typ == actionNil:
+  # show usage if no action is specified and version was not requested
+  if result.action.typ == actionNil and not result.showVersion:
     result.showHelp = true

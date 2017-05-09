@@ -2,6 +2,7 @@ import asyncdispatch
 import gdsyncpkg/common,
        gdsyncpkg/options,
        gdsyncpkg/usage,
+       gdsyncpkg/version,
        gdsyncpkg/daemon,
        gdsyncpkg/fsmonitor,
        gdsyncpkg/oauth
@@ -22,6 +23,9 @@ proc doAction(options: Options) =
   of actionNil:
     if options.showHelp:
       showUsage()
+
+    if options.showVersion:
+      showVersion()
 
   else:
     echo options
