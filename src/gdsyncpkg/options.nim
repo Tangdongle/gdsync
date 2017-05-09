@@ -2,12 +2,15 @@ import parseopt2
 import strutils
 
 type ActionType* = enum
-  actionNil
+  actionNil,
+  actionWatch
 
 type Action* = object
   case typ*: ActionType
   of actionNil:
     nil
+  of actionWatch:
+    path*: string
 
 type Options* = object
   action*: Action
@@ -19,13 +22,37 @@ proc initOptions(): Options =
   result.showHelp = false
   result.showVersion = false
 
+proc initAction(options: var Options, key: string) =
+  case options.action.typ
+  of actionWatch:
+    options.action.path = key
+  of actionNil:
+    discard
+  else:
+    echo "Unhandled action type: " & $(options.action.typ)
+
+proc parseActionType(action: string): ActionType =
+  case action.normalize()
+  of "watch":
+    result = actionWatch
+  else:
+    echo action
+    result = actionNil
+
 proc parseCommand(key: string, result: var Options) =
-  echo "parseCommand"
-  echo key
+  result.action.typ = parseActionType(key)
+  initAction(result, key)
 
 proc parseArgument(key: string, result: var Options) =
-  echo "parseArgument"
-  echo key
+  case result.action.typ
+  of actionNil:
+    discard
+
+  of actionWatch:
+    result.action.path = key
+
+  else:
+    echo "Unhandled action/argument: " & $(result.action.typ) & "/" & key
 
 proc parseFlag(flag: string, val: string, result: var Options, kind = cmdLongOption) =
   let f = flag.normalize()

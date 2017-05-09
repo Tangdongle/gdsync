@@ -2,7 +2,7 @@ const usage = """
 Usage: gdsync COMMAND [opts]
 
 Commands:
-  Not applicable at this time.
+  watch        [path]       Add current path to watch list.
 
 
 Options:
