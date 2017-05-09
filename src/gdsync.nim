@@ -1,6 +1,7 @@
 import asyncdispatch
 import gdsyncpkg/common,
        gdsyncpkg/options,
+       gdsyncpkg/usage,
        gdsyncpkg/daemon,
        gdsyncpkg/fsmonitor,
        gdsyncpkg/oauth
@@ -17,7 +18,14 @@ proc main*(argv: seq[string] = nil): int =
   return 1
 
 proc doAction(options: Options) =
-  echo options
+  case options.action.typ
+  of actionNil:
+    if options.showHelp:
+      showUsage()
+
+  else:
+    echo options
+
 
 when isMainModule:
   import os
