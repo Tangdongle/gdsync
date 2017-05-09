@@ -1,4 +1,3 @@
-#
 # Package
 
 version       = "0.1.0"
@@ -6,17 +5,28 @@ author        = "ryancotter,ashleybroughton"
 description   = "Google Drive sync application for linux"
 license       = "GNU"
 
-#srcDir        = "gdsync/src"
-#binDir        = "gdsync/bin"
 bin           = @["gdsync"]
+srcDir        = "src"
 skipDirs      = @["private"]
+
 # Dependencies
-requires @["nim >= 0.16.0", "oauth >= 0.04.0"]
+requires "nim >= 0.16.0"
+requires "oauth >= 0.4.0"
+
+when defined(nimdistros):
+  import distros
+  if detectOs(Ubuntu):
+    foreignDep "libssl-dev"
+  else:
+    foreignDep "openssl"
 
 # Tasks
-task compile_main, "Compiles the project":
-    exec "nim c -d:ssl --out:gdsync gdsyncpkg/gdsync.nim"
+task co, "Compile only":
+  exec "nim c -d:ssl --out:build/gdsync src/gdsync.nim"
 
-task exec, "Execute the main binary":
-    exec "./gdsync"
+task cr, "Compile and run":
+  exec "nim c -d:ssl --out:build/gdsync -r src/gdsync.nim"
 
+task test, "Run the tester":
+  withDir "tests":
+    exec "nim c -r tester"
