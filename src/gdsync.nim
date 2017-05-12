@@ -1,5 +1,6 @@
 import asyncdispatch
 import gdsyncpkg/common,
+       gdsyncpkg/config,
        gdsyncpkg/options,
        gdsyncpkg/usage,
        gdsyncpkg/version,
@@ -38,6 +39,7 @@ when isMainModule:
   import os
 
   try:
+    let config = loadConfig()
     parseCmdLine().doAction()
     quit(0)
   except:
