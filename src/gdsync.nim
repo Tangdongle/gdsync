@@ -19,7 +19,7 @@ proc main*(argv: seq[string] = nil): int =
   echo argv
   return 1
 
-proc doAction(options: Options) =
+proc doAction(options: Options, config: Config) =
   case options.action.typ
   of actionNil:
     if options.showHelp:
@@ -40,7 +40,7 @@ when isMainModule:
 
   try:
     let config = loadConfig()
-    parseCmdLine().doAction()
+    parseCmdLine().doAction(config)
     quit(0)
   except:
     echo getCurrentExceptionMsg()
