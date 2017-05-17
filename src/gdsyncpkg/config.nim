@@ -2,9 +2,9 @@ import os
 import tables
 import json
 
-const config_dir = joinPath(getConfigDir(), "gdsync")
 const config_file_name = "config.json"
-const config_file_path = joinPath(config_dir, config_file_name)
+let config_dir = joinPath(getConfigDir(), "gdsync")
+let config_file_path = joinPath(config_dir, config_file_name)
 
 type Config* = object
   PidFile*: string
