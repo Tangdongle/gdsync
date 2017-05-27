@@ -1,5 +1,6 @@
 import asyncdispatch
 import gdsyncpkg/common,
+       gdsyncpkg/logging,
        gdsyncpkg/config,
        gdsyncpkg/options,
        gdsyncpkg/usage,

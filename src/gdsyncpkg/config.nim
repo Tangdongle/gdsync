@@ -1,6 +1,8 @@
 import os
 import tables
 import json
+import strutils
+import logging
 
 const config_file_name = "config.json"
 let config_dir = joinPath(getConfigDir(), "gdsync")
@@ -9,15 +11,18 @@ let config_file_path = joinPath(config_dir, config_file_name)
 type Config* = object
   PidFile*: string
   DaemonLogFile*: string
+  LogLevel*: LogLevel
 
 proc defaultConfig(): Config =
   result.PidFile = joinPath(config_dir, "gdsync.pid")
   result.DaemonLogFile = joinPath(config_dir, "daemon.log")
+  result.LogLevel = LogLevel.info
 
 proc configToJsonString(config: Config): string =
   var t = initOrderedTable[string, JsonNode]()
   t.add("PidFile", newJString(config.PidFile))
   t.add("DaemonLogFile", newJString(config.DaemonLogFile))
+  t.add("LogLevel", newJString($config.LogLevel))
 
   var jobj = newJObject()
   jobj.fields = t
@@ -29,6 +34,7 @@ proc readConfig(): Config =
   json_node = parseFile(config_file_path)
   result.PidFile = json_node["PidFile"].str
   result.DaemonLogFile = json_node["DaemonLogFile"].str
+  result.LogLevel = parseEnum[LogLevel](json_node["LogLevel"].str)
 
 proc loadConfig*(): Config =
   let first_run = not existsOrCreatedir(config_dir)

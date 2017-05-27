@@ -22,10 +22,10 @@ when defined(nimdistros):
 
 # Tasks
 task co, "Compile only":
-  exec "nim c -d:ssl --out:build/gdsync src/gdsync.nim"
+  exec "nim c -d:ssl --threads:on --out:build/gdsync src/gdsync.nim"
 
 task cr, "Compile and run":
-  exec "nim c -d:ssl --out:build/gdsync -r src/gdsync.nim"
+  exec "nim c -d:ssl --threads:on --out:build/gdsync -r src/gdsync.nim"
 
 task test, "Run the tester":
   withDir "tests":
