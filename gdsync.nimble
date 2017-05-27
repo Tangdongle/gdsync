@@ -22,13 +22,18 @@ when defined(nimdistros):
 
 # Tasks
 task co, "Compile only":
-  exec "mkdir build"
   exec "nim c -d:ssl --out:build/gdsync src/gdsync.nim"
 
 task cr, "Compile and run":
-  exec "mkdir build"
   exec "nim c -d:ssl --out:build/gdsync -r src/gdsync.nim"
 
 task test, "Run the tester":
   withDir "tests":
     exec "nim c -r tester"
+
+#Hooks
+before co:
+  exec "mkdir build"
+
+before cr:
+  exec "mkdir build"
