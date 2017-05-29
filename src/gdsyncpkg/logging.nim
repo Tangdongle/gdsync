@@ -78,34 +78,42 @@ var msg = Message(kind: write, module: "", text: "")
 proc send(module, levelName: string, args: varargs[string]) =
   msg.module = module
   msg.text.setLen(0)
-  msg.text.add levelName & ": "
+
+  if not isNilOrWhitespace(levelName):
+    msg.text.add levelName & ": "
+
   for arg in args:
     msg.text.add arg
   channel.send msg
 
-template log*(levelName: string, args: varargs[string, `$`]) =
+template log*(args: varargs[string, `$`]) =
   const module = instantiationInfo().filename[0 .. ^5]
-  send module, levelName, args
+  send module, "", args
 
 template debug*(args: varargs[string, `$`]) =
   if logLevel <= LogLevel.debug:
-    log("DEBUG", args)
+    const module = instantiationInfo().filename[0 .. ^5]
+    send module, "DEBUG", args
 
 template info*(args: varargs[string, `$`]) =
   if logLevel <= LogLevel.info:
-    log("INFO", args)
+    const module = instantiationInfo().filename[0 .. ^5]
+    send module, "INFO", args
 
 template warn*(args: varargs[string, `$`]) =
   if logLevel <= LogLevel.warn:
-    log("WARN", args)
+    const module = instantiationInfo().filename[0 .. ^5]
+    send module, "WARN", args
 
 template error*(args: varargs[string, `$`]) =
   if logLevel <= LogLevel.error:
-    log("ERROR", args)
+    const module = instantiationInfo().filename[0 .. ^5]
+    send module, "ERROR", args
 
 template fatal*(args: varargs[string, `$`]) =
   if logLevel <= LogLevel.fatal:
-    log("FATAL", args)
+    const module = instantiationInfo().filename[0 .. ^5]
+    send module, "FATAL", args
 
 # Initialize module
 open channel
