@@ -41,7 +41,6 @@ when isMainModule:
 
   try:
     let config = loadConfig()
-    logLevel = config.LogLevel
     parseCmdLine().doAction(config)
     quit(0)
   except:

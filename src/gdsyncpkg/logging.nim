@@ -23,7 +23,6 @@ type
       nil
 
 var
-  logLevel* = LogLevel.info
   loggers = newSeq[Logger]()
   channel: Channel[Message]
   thread: Thread[void]
@@ -91,27 +90,27 @@ template log*(args: varargs[string, `$`]) =
   send module, "", args
 
 template debug*(args: varargs[string, `$`]) =
-  if logLevel <= LogLevel.debug:
+  if config.LogLevel <= LogLevel.debug:
     const module = instantiationInfo().filename[0 .. ^5]
     send module, "DEBUG", args
 
 template info*(args: varargs[string, `$`]) =
-  if logLevel <= LogLevel.info:
+  if config.LogLevel <= LogLevel.info:
     const module = instantiationInfo().filename[0 .. ^5]
     send module, "INFO", args
 
 template warn*(args: varargs[string, `$`]) =
-  if logLevel <= LogLevel.warn:
+  if config.LogLevel <= LogLevel.warn:
     const module = instantiationInfo().filename[0 .. ^5]
     send module, "WARN", args
 
 template error*(args: varargs[string, `$`]) =
-  if logLevel <= LogLevel.error:
+  if config.LogLevel <= LogLevel.error:
     const module = instantiationInfo().filename[0 .. ^5]
     send module, "ERROR", args
 
 template fatal*(args: varargs[string, `$`]) =
-  if logLevel <= LogLevel.fatal:
+  if config.LogLevel <= LogLevel.fatal:
     const module = instantiationInfo().filename[0 .. ^5]
     send module, "FATAL", args
 
