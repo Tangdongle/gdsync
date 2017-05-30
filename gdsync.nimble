@@ -10,7 +10,7 @@ srcDir        = "src"
 skipDirs      = @["private"]
 
 # Dependencies
-requires "nim >= 0.16.0"
+requires "nim >= 0.17.0"
 requires "oauth >= 0.4.0"
 
 when defined(nimdistros):
