@@ -10,7 +10,11 @@ srcDir        = "src"
 skipDirs      = @["private"]
 
 # Dependencies
+<<<<<<< HEAD
 requires "nim >= 0.17.0"
+=======
+requires "nim >= 0.16.0"
+>>>>>>> upstream/develop
 requires "oauth >= 0.4.0"
 
 when defined(nimdistros):
