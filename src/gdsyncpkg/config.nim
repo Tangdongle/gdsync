@@ -13,12 +13,14 @@ type Config* = object
   DaemonLogFile*: string
   LogLevel*: LogLevel
 
-proc defaultConfig(): Config =
+proc defaultConfig*(): Config =
+  ## Return a default config object
   result.PidFile = joinPath(config_dir, "gdsync.pid")
   result.DaemonLogFile = joinPath(config_dir, "daemon.log")
   result.LogLevel = LogLevel.info
 
 proc configToJsonString(config: Config): string =
+  ## Parses config to a JSON string
   var t = initOrderedTable[string, JsonNode]()
   t.add("PidFile", newJString(config.PidFile))
   t.add("DaemonLogFile", newJString(config.DaemonLogFile))
@@ -30,6 +32,7 @@ proc configToJsonString(config: Config): string =
   result = pretty(jobj) & "\n"
 
 proc readConfig(): Config =
+  ## Load config from a file into memory
   var json_node: JsonNode
   json_node = parseFile(config_file_path)
   result.PidFile = json_node["PidFile"].str
@@ -37,6 +40,7 @@ proc readConfig(): Config =
   result.LogLevel = parseEnum[LogLevel](json_node["LogLevel"].str)
 
 proc loadConfig*(): Config =
+  ## Sets up your config
   let first_run = not existsOrCreatedir(config_dir)
   let config_exists = existsFile(config_file_path)
   

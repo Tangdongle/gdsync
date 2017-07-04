@@ -39,6 +39,11 @@ proc doAction(options: Options, config: Config) =
 when isMainModule:
   import os
 
+  echo "GDSinkers"
+
+  let argv = if paramCount() > 0: commandLineParams()
+            else: nil
+  echo "ARGV: " & argv
   try:
     let config = loadConfig()
     parseCmdLine().doAction(config)
@@ -47,10 +52,6 @@ when isMainModule:
     echo getCurrentExceptionMsg()
     quit(1)
 
-  echo "GDSinkers"
-
-  let argv = if paramCount() > 0: commandLineParams()
-            else: nil
 
   echo main(argv)
   runForever()

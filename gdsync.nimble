@@ -29,4 +29,4 @@ task cr, "Compile and run":
 
 task test, "Run the tester":
   withDir "tests":
-    exec "nim c -r tester"
+    exec "nim c -d:ssl --threads:on --taintMode:off -r all"
